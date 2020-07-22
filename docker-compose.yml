@@ -1,0 +1,37 @@
+version: '3'
+services:
+
+  runner-api:
+    build:
+      context: ./
+      dockerfile: dev.Dockerfile
+    command: npm run dev
+    volumes:
+      - ./src:/app/src:delegated
+      - ./package.json:/app/package.json:delegated
+    depends_on:
+      - nodeone
+    ports:
+      - 3001:3001
+    environment:
+      VIRTUAL_HOST: taxwave-api.LC1.docker
+
+  nodeone:
+    image: taxwavecontainer.azurecr.io/eth_node
+    networks:
+      - lc1-net
+    command: >
+      bash -c "./eth_common/setup_master 2> /dev/null
+      && geth --networkid 15 --allow-insecure-unlock --unlock '0x0c1c28336F5F256bD6657215F00eE83121e51336' --password eth_common/password --mine --miner.gasprice=0 --rpc --rpcapi="admin,db,miner,eth,debug,personal,net,shh,txpool,web3" --rpcaddr="0.0.0.0" --rpcport=8545 --rpccorsdomain="*" --rpcvhosts="*" --shh  --ws --wsaddr="0.0.0.0" --wsport=8546 --wsapi="admin,db,miner,eth,debug,personal,net,shh,txpool,web3" --wsorigins="*" --syncmode 'full' --debug --identity=NODE_ONE"
+    restart: on-failure
+    environment:
+      VIRTUAL_HOST: nodeone.docker
+    ports:
+      - 8546:8546
+      - 8545:8545
+    tty: true
+
+
+networks:
+  lc1-net:
+    external: false

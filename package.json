@@ -1,0 +1,29 @@
+{
+  "name": "etherum-node-runner",
+  "version": "0.0.1",
+  "description": "Use this to run many calls against an ethereum node",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node src/api.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucachaco/etherum-node-runner.git"
+  },
+  "keywords": [
+    "blockchain",
+    "stress-testing",
+    "geth",
+    "smart-contracts"
+  ],
+  "author": "luiscarlosch@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lucachaco/etherum-node-runner/issues"
+  },
+  "homepage": "https://github.com/lucachaco/etherum-node-runner#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
