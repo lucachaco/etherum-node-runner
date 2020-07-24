@@ -1,6 +1,6 @@
 import { ethers } from 'ethers/index';
 import { getWallet, getContractInstance, getContractInstanceWithSigner } from '../ethers';
-import nonFungibleTokenContract from '../../build/contracts/DET.json';
+import nonFungibleTokenContract from '../contracts/DET.json';
 
 const deploy = async privateKey => {
   try {

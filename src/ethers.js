@@ -1,27 +1,20 @@
-import { ethers } from 'ethers';
-import retry from 'retry';
-import Web3 from './web3';
+const ethers = require('ethers');
+const retry = require('retry');
+const config = require('./config');
 
 let etherjsProvider;
 /**
  * Connects to Blockchain and then sets proper handlers for events
  */
-export const connect = () => {
+const connect = () => {
   console.log('Blockchain Connecting ...');
-  try {
-    Web3.connect();
-  } catch (e) {
-    console.log('Error while connecting to Blockchain with Web3');
-  }
+  console.log(`Connecting to: ${config.RPC_PROVIDER}`);
 
   try {
     const connectionInfo = { url: config.RPC_PROVIDER, timeout: 3000000 };
-    etherjsProvider = new ethers.providers.JsonRpcProvider(connectionInfo, 'unspecified');
+    etherjsProvider = new ethers.providers.JsonRpcProvider(connectionInfo);
   } catch (e) {
-    logger.log({
-      level: 'error',
-      message: 'Error while connecting to the provider: '.concat(e),
-    });
+    console.log('Error while connecting to the provider: ');
   }
 
   const handleError = err => {
@@ -43,7 +36,7 @@ export const connect = () => {
 /**
  * Returns the default provider.
  */
-export const getProvider = () => {
+const getProvider = () => {
   const promise = new Promise(resolve => {
     if (etherjsProvider !== undefined) {
       etherjsProvider
@@ -69,19 +62,13 @@ export const getProvider = () => {
 const faultToleranceGetProvider = cb => {
   const operation = retry.operation(config.RETRY_OPTIONS);
   operation.attempt(currentAttempt => {
-    logger.log({
-      level: 'info',
-      message: `Get Ethers.js Provider | Attempt: ${currentAttempt}`,
-    });
+    console.log(`Get Ethers.js Provider | Attempt: ${currentAttempt}`);
     return new Promise((resolve, reject) => {
       try {
         const provider = getProvider();
         resolve(cb(provider.error ? operation.mainError() : null, provider));
       } catch (error) {
-        logger.log({
-          level: 'error',
-          message: 'Error while getting Ethers.js Provider: '.concat(error),
-        });
+        console.log(`Error while getting Ethers.js Provider: ${error}`);
         operation.retry(error);
         reject(error);
       }
@@ -89,7 +76,7 @@ const faultToleranceGetProvider = cb => {
   });
 };
 
-export const getProviderResolver = async () => {
+const getProviderResolver = async () => {
   return new Promise((resolve, reject) => {
     faultToleranceGetProvider(async (err, provider) => {
       if (err) {
@@ -105,7 +92,7 @@ export const getProviderResolver = async () => {
  * Returns a wallet using the given private key. The default key is privatekey using the default ganache seed.
  * @param {*} privateKey
  */
-export const getWallet = async privateKey => {
+const getWallet = async privateKey => {
   const provider = await getProviderResolver();
   let wallet = null;
   try {
@@ -124,7 +111,7 @@ export const getWallet = async privateKey => {
  * @throws {ReferenceError} If contract doesn't exist, throws an exception.
  * @return {ethers.Contract} Returns contract object.
  */
-export const getContract = async (contractName, contractAddress) => {
+const getContract = async (contractName, contractAddress) => {
   try {
     const contractJson = jsonfile.readFileSync(
       path.join(__dirname, './contracts/', `${contractName}.json`),
@@ -145,7 +132,7 @@ export const getContract = async (contractName, contractAddress) => {
  * @throws {ReferenceError} If contract doesn't exist, throws an exception.
  */
 
-export const getContractWithSigner = async (contractName, contractAddress, privateKey) => {
+const getContractWithSigner = async (contractName, contractAddress, privateKey) => {
   try {
     const contractJson = jsonfile.readFileSync(
       path.join(__dirname, './contracts/', `${contractName}.json`),
@@ -183,7 +170,7 @@ const faultTolerantGetInstance = (contractAddress, contractABI, provider, cb) =>
   });
 };
 
-export const getContractInstance = async (contractABI, contractAddress) => {
+const getContractInstance = async (contractABI, contractAddress) => {
   try {
     const provider = await getProviderResolver();
     return new Promise((resolve, reject) => {
@@ -200,7 +187,7 @@ export const getContractInstance = async (contractABI, contractAddress) => {
   }
 };
 
-export const getContractInstanceWithSigner = async (contractABI, contractAddress, privateKey) => {
+const getContractInstanceWithSigner = async (contractABI, contractAddress, privateKey) => {
   try {
     const provider = await getProviderResolver();
     const contract = new ethers.Contract(contractAddress, contractABI, provider);
@@ -210,3 +197,5 @@ export const getContractInstanceWithSigner = async (contractABI, contractAddress
     throw new Error(`Failed to instantiate compiled contract ${contractAddress}`);
   }
 };
+
+module.exports = { connect, getContractInstanceWithSigner };

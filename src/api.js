@@ -1,10 +1,9 @@
-import { connect } from './ethers';
-
 const express = require('express');
+const ethers = require('./ethers');
 
 const api = express();
 const port = 3001;
-connect();
+ethers.connect();
 
 api.get('/health-check', (req, res) => {
   return res.send('Ok.');
