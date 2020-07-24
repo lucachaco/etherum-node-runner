@@ -22,6 +22,7 @@ services:
       dockerfile: dev.Dockerfile
     command: npm run dev
     volumes:
+      - ./build:/app/build:delegated
       - ./src:/app/src:delegated
       - ./src/config:/src/config:delegated
       - ./package.json:/app/package.json:delegated

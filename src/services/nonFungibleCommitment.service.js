@@ -1,4 +1,4 @@
-import { deploy, mint } from '../helpers/nonFungibleToke.helper';
+const { deploy, mint } = require('../helpers/nonFungibleToke.helper');
 
 const deployNonFungibleToken = async ({ privateKey }) => {
   try {
@@ -19,4 +19,4 @@ const mintNonFungibleToken = async ({
   return mintResult;
 };
 
-export { deployNonFungibleToken, mintNonFungibleToken };
+module.exports = { deployNonFungibleToken, mintNonFungibleToken };

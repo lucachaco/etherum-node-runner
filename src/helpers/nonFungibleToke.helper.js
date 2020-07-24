@@ -1,11 +1,13 @@
-import { ethers } from 'ethers/index';
-import { getWallet, getContractInstance, getContractInstanceWithSigner } from '../ethers';
-import nonFungibleTokenContract from '../contracts/DET.json';
+const ethersLib = require('ethers');
+const { ethers } = require('../ethers');
+const { getWallet, getContractInstance, getContractInstanceWithSigner } = require('../ethers');
+const nonFungibleTokenContract = require('../../build/contracts/NFTokenMetadata.json');
 
 const deploy = async privateKey => {
   try {
     const wallet = await getWallet(privateKey);
-    const factory = new ethers.ContractFactory(
+    console.log({ ethersLib });
+    const factory = new ethersLib.ContractFactory(
       nonFungibleTokenContract.abi,
       nonFungibleTokenContract.bytecode,
       wallet,
@@ -46,4 +48,4 @@ const mint = async ({ contractAddress, privateKey, to, tokenId }) => {
     });
 };
 
-export { deploy, getInstance, mint };
+module.exports = { deploy, getInstance, mint };

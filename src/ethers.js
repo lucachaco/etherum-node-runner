@@ -198,4 +198,4 @@ const getContractInstanceWithSigner = async (contractABI, contractAddress, priva
   }
 };
 
-module.exports = { connect, getContractInstanceWithSigner };
+module.exports = { connect, getContractInstanceWithSigner, getWallet };
