@@ -35,6 +35,29 @@ services:
       - lc1-net
 
 
+  truffle:
+    image: ajmay/truffle:5.0.9
+    volumes:
+      - ./truffle/package-lock.json:/truffle/package-lock.json:delegated
+      - ./truffle/package.json:/truffle/package.json:delegated
+      - ./contracts:/truffle/contracts:delegated
+      - ./migrations:/truffle/migrations:delegated
+      - ./build/contracts:/truffle/build/contracts:cached
+    environment:
+      SOLC_VERSION: '0.5.8'
+      ETH_HOST: nodeone
+      ETH_PORT: 8545
+      ETH_GAS: 6000000
+      ETH_GAS_PRICE: 20000000000
+      TRUFFLE_NETWORK_ID: '*'
+      HASH_TYPE: 'mimc'
+    logging:
+      options:
+        max-size: 10m
+    networks:
+      - lc1-net
+
+
 
 networks:
   lc1-net:
