@@ -36,7 +36,10 @@ const getInstanceWithSigner = async (contractAddress, privateKey) => {
 
 const mint = async ({ privateKey, contractAddress, tokenId, _uri }) => {
   const contractInstance = await getInstanceWithSigner(contractAddress, privateKey);
-  const mintResponse = await contractInstance.mint(tokenId, _uri);
+  const overrides = {
+    gasLimit: 750000,
+  };
+  const mintResponse = await contractInstance.mint(tokenId, _uri, overrides);
   return mintResponse;
 };
 

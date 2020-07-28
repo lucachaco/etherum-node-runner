@@ -17,15 +17,17 @@ api.get('/health-check', async (req, res) => {
   const _uri = '';
 
   const deployNonFungibleTokenResponse = await deployNonFungibleToken({ privateKey });
+  for (let i = 0; i < 1000; i += 1) {
+    const mintNonFungibleTokenResponse = await mintNonFungibleToken({
+      privateKey,
+      contractAddress: deployNonFungibleTokenResponse.address,
+      tokenId,
+      _uri,
+    });
+    console.log(`Hash ${i}: ${mintNonFungibleTokenResponse.hash}`);
+  }
 
-  const mintNonFungibleTokenResponse = await mintNonFungibleToken({
-    privateKey,
-    contractAddress: deployNonFungibleTokenResponse.address,
-    tokenId,
-    _uri,
-  });
-  console.log({ mintNonFungibleTokenResponse });
-  return res.send(mintNonFungibleTokenResponse);
+  return res.send('Finished!');
 });
 
 api.listen(port, () => console.log(`Example app listening on port ${port}!`));
