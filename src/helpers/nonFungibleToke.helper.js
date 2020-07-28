@@ -6,7 +6,6 @@ const nonFungibleTokenContract = require('../../build/contracts/NFTokenMetadata.
 const deploy = async privateKey => {
   try {
     const wallet = await getWallet(privateKey);
-    console.log({ ethersLib });
     const factory = new ethersLib.ContractFactory(
       nonFungibleTokenContract.abi,
       nonFungibleTokenContract.bytecode,
@@ -35,17 +34,10 @@ const getInstanceWithSigner = async (contractAddress, privateKey) => {
   return instance;
 };
 
-const mint = async ({ contractAddress, privateKey, to, tokenId }) => {
+const mint = async ({ privateKey, contractAddress, tokenId, _uri }) => {
   const contractInstance = await getInstanceWithSigner(contractAddress, privateKey);
-  contractInstance
-    .mint(to, tokenId)
-    .then(receipt => {
-      return receipt;
-    })
-    .catch(error => {
-      console.log('Inside mint: ', error);
-      return error;
-    });
+  const mintResponse = await contractInstance.mint(tokenId, _uri);
+  return mintResponse;
 };
 
 module.exports = { deploy, getInstance, mint };
