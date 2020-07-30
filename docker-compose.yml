@@ -62,4 +62,4 @@ services:
 
 networks:
   lc1-net:
-    external: false
+    external: true

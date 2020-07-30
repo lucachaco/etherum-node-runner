@@ -1,6 +1,13 @@
 const ethersLib = require('ethers');
-const { ethers } = require('../ethers');
-const { getWallet, getContractInstance, getContractInstanceWithSigner } = require('../ethers');
+const {
+  getContractInstance,
+  getSignedTx,
+  getContractInstanceWithSigner,
+  getProviderResolver,
+  getWallet,
+  getUnsignedContractDeployment,
+  getBalance,
+} = require('../ethers');
 const nonFungibleTokenContract = require('../../build/contracts/NFTokenMetadata.json');
 
 const deploy = async privateKey => {
@@ -14,6 +21,45 @@ const deploy = async privateKey => {
     const factoryDeployContract = await factory.deploy();
     const deployedContract = await factoryDeployContract.deployed();
     return deployedContract;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+const deploy2 = async privateKey => {
+  try {
+    const balance = await getBalance(privateKey);
+
+    const tx = await getUnsignedContractDeployment(nonFungibleTokenContract);
+    /* console.log({ tx }); */
+    /* const contractInstance = await getContractInstance(
+      nonFungibleTokenContract.abi,
+      contractAddress,
+    ); */
+    // console.log('mint: ', JSON.stringify(contractInstance.interface.functions));
+    // const tx = await contractInstance.interface.functions.mint.encode([tokenId, _uri]);
+
+    const signedTransaction = await getSignedTx(
+      { data: tx, to: '', gasPrice: 1, gasLimit: 2000000 },
+      privateKey,
+    );
+    const provider = await getProviderResolver();
+    const sentTransaction = await provider.sendTransaction(signedTransaction);
+
+    return provider.getTransactionReceipt(sentTransaction.hash);
+    // const receipt = await getTransactionReceipt(provider, transaction.transactionHash);
+
+    /*
+    const wallet = await getWallet(privateKey);
+    const factory = new ethersLib.ContractFactory(
+      nonFungibleTokenContract.abi,
+      nonFungibleTokenContract.bytecode,
+      wallet,
+    );
+    const factoryDeployContract = await factory.deploy();
+    const deployedContract = await factoryDeployContract.deployed();
+    return deployedContract; */
   } catch (err) {
     console.log(err);
     throw err;
@@ -43,4 +89,18 @@ const mint = async ({ privateKey, contractAddress, tokenId, _uri }) => {
   return mintResponse;
 };
 
-module.exports = { deploy, getInstance, mint };
+const mint2 = async ({ privateKey, contractAddress, tokenId, _uri }) => {
+  const contractInstance = await getContractInstance(nonFungibleTokenContract.abi, contractAddress);
+  const tx = await contractInstance.interface.functions.mint.encode([tokenId, _uri]);
+
+  const signedTransaction = await getSignedTx(
+    { data: tx, to: '', gasPrice: 1, gasLimit: '0x4c4b40' },
+    privateKey,
+  );
+  const provider = await getProviderResolver();
+  const sentTransaction = await provider.sendTransaction(signedTransaction);
+
+  return provider.getTransactionReceipt(sentTransaction.hash);
+};
+
+module.exports = { deploy, deploy2, getInstance, mint, mint2 };

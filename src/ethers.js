@@ -150,19 +150,11 @@ const getContractWithSigner = async (contractName, contractAddress, privateKey) 
 const faultTolerantGetInstance = (contractAddress, contractABI, provider, cb) => {
   const operation = retry.operation(config.RETRY_OPTIONS);
   operation.attempt(currentAttempt => {
-    logger.log({
-      level: 'info',
-      message: `Get instance attempt: ${currentAttempt}`,
-    });
     return new Promise((resolve, reject) => {
       try {
         const instance = new ethers.Contract(contractAddress, contractABI, provider);
         resolve(cb(instance.error ? operation.mainError() : null, instance));
       } catch (error) {
-        logger.log({
-          level: 'error',
-          message: 'Error while getting the instance: '.concat(error),
-        });
         operation.retry(error);
         reject(error);
       }
@@ -198,4 +190,52 @@ const getContractInstanceWithSigner = async (contractABI, contractAddress, priva
   }
 };
 
-module.exports = { connect, getContractInstanceWithSigner, getWallet };
+const getTransactionCount = async address => {
+  const provider = await getProvider();
+  const transactionCount = await provider.getTransactionCount(address);
+  return transactionCount;
+};
+
+const getSignedTx = async (transaction, privateKey) => {
+  const wallet = await getWallet(privateKey);
+  /* console.log({ wallet }); */
+  // wallet.defaultGasLimit();
+  const tx = {
+    ...transaction,
+    gasLimit: transaction.gasLimit || 100000000,
+    nonce: transaction.nonce || (await getTransactionCount(wallet.address)),
+  };
+  return wallet.sign(tx);
+};
+
+const getUnsignedContractDeployment = (contractJson, args = []) => {
+  try {
+    const factory = new ethers.ContractFactory(contractJson.abi, contractJson.bytecode);
+    const transaction = factory.getDeployTransaction(...args);
+    return transaction.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getBalance = async privateKey => {
+  const wallet = await getWallet(privateKey);
+
+  const { address } = wallet.signingKey;
+  const provider = await getProviderResolver();
+  return provider.getBalance(address).then(balance => {
+    // balance is a BigNumber (in wei); format is as a string (in ether)
+    return ethers.utils.commify(Number(ethers.utils.formatEther(balance)).toFixed(2));
+  });
+};
+
+module.exports = {
+  connect,
+  getContractInstanceWithSigner,
+  getWallet,
+  getSignedTx,
+  getProviderResolver,
+  getContractInstance,
+  getUnsignedContractDeployment,
+  getBalance,
+};

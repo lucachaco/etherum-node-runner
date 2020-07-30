@@ -14,17 +14,20 @@ api.get('/health-check', async (req, res) => {
 
   const tokenId = 2;
   // eslint-disable-next-line no-underscore-dangle
-  const _uri = '';
+  const _uri = '00';
 
   const deployNonFungibleTokenResponse = await deployNonFungibleToken({ privateKey });
-  for (let i = 0; i < 1000; i += 1) {
-    const mintNonFungibleTokenResponse = await mintNonFungibleToken({
+
+  /* console.log({ deployNonFungibleTokenResponse }); */
+
+  for (let i = 0; i < 500; i += 1) {
+    const mintNonFungibleTokenReceipt = await mintNonFungibleToken({
       privateKey,
-      contractAddress: deployNonFungibleTokenResponse.address,
+      contractAddress: deployNonFungibleTokenResponse.contractAddress,
       tokenId,
       _uri,
     });
-    console.log(`Hash ${i}: ${mintNonFungibleTokenResponse.hash}`);
+    console.log(`Receipt ${i}: `, mintNonFungibleTokenReceipt);
   }
 
   return res.send('Finished!');
