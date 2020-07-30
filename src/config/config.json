@@ -1,4 +1,4 @@
 {
-  "RPC_PROVIDER_WS": "ws://nodeone:8546",
-  "RPC_PROVIDER": "http://nodeone:8545"
+  "RPC_PROVIDER_WS": "ws://node1-taxwave-demo.eastus.cloudapp.azure.com:8011",
+  "RPC_PROVIDER": "http://node1-taxwave-demo.eastus.cloudapp.azure.com:8001"
 }

@@ -30,6 +30,7 @@ const deploy = async privateKey => {
 const deploy2 = async privateKey => {
   try {
     const balance = await getBalance(privateKey);
+    console.log({ balance });
 
     const tx = await getUnsignedContractDeployment(nonFungibleTokenContract);
     /* console.log({ tx }); */
@@ -46,8 +47,11 @@ const deploy2 = async privateKey => {
     );
     const provider = await getProviderResolver();
     const sentTransaction = await provider.sendTransaction(signedTransaction);
+    //console.log({ sentTransaction });
 
-    return provider.getTransactionReceipt(sentTransaction.hash);
+    const receipt = await provider.getTransactionReceipt(sentTransaction.hash);
+    //console.log({ receipt });
+    return receipt;
     // const receipt = await getTransactionReceipt(provider, transaction.transactionHash);
 
     /*
@@ -92,7 +96,8 @@ const mint = async ({ privateKey, contractAddress, tokenId, _uri }) => {
 const mint2 = async ({ privateKey, contractAddress, tokenId, _uri }) => {
   const contractInstance = await getContractInstance(nonFungibleTokenContract.abi, contractAddress);
   const tx = await contractInstance.interface.functions.mint.encode([tokenId, _uri]);
-
+  const balance = await getBalance(privateKey);
+  console.log({ balance });
   const signedTransaction = await getSignedTx(
     { data: tx, to: '', gasPrice: 1, gasLimit: '0x4c4b40' },
     privateKey,
