@@ -111,4 +111,29 @@ const mint2 = async ({ privateKey, contractAddress, tokenId, _uri }) => {
   return provider.getTransactionReceipt(sentTransaction.hash);
 };
 
-module.exports = { deploy, deploy2, deploy3, getInstance, mint, mint2 };
+const mint3 = async ({ contractAddress, privateKey, tokenId }) => {
+  const contractInstance = await getContractInstance(detContract.abi, contractAddress);
+
+  const to = contractAddress;
+  const fungibleTokenContractAddress = contractAddress;
+  const responsibleEntityAddress = contractAddress;
+  const tx = await contractInstance.interface.functions.mint.encode([
+    to,
+    tokenId,
+    fungibleTokenContractAddress,
+    responsibleEntityAddress,
+  ]);
+  console.log('b');
+  // const balance = await getBalance(privateKey);
+  // console.log({ balance });
+  const signedTransaction = await getSignedTx({ data: tx, to: '', gasLimit: 750000 }, privateKey);
+  console.log('c');
+  const provider = await getProviderResolver();
+  console.log('d');
+  const sentTransaction = await provider.sendTransaction(signedTransaction);
+  console.log('e');
+
+  return provider.getTransactionReceipt(sentTransaction.hash);
+};
+
+module.exports = { deploy, deploy2, deploy3, getInstance, mint, mint2, mint3 };
