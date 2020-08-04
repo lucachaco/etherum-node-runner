@@ -216,7 +216,6 @@ const mint3 = async ({ privateKey, contractAddress, tokenId }) => {
     to,
     tokenId,
     hashOfCOR,
-    tokenByteValues,
     tokenQuestionsValues,
     tokenNumbers,
     fungibleTokenContractAddress,

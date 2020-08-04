@@ -116,7 +116,6 @@ contract DET is ERC721Metadata('DividentEventToken', 'DET'), ERC721Enumerable, O
         returns (
             address,
             uint256[5] memory,
-            bytes32[9] memory,
             bytes1[5] memory,
             string memory
         )
@@ -129,17 +128,7 @@ contract DET is ERC721Metadata('DividentEventToken', 'DET'), ERC721Enumerable, O
         tokenNumbers[2] = temp.amount;
         tokenNumbers[3] = temp.levelCount;
         tokenNumbers[4] = temp.previousTokenId;
-        bytes32[9] memory tokenByteValues;
         bytes1[5] memory tokenQuestionsValues;
-        tokenByteValues[0] = temp.securitySymbol;
-        tokenByteValues[1] = temp.country;
-        tokenByteValues[2] = temp.treaty;
-        tokenByteValues[3] = temp.recordDate;
-        tokenByteValues[4] = temp.opaqueInvestorID;
-        tokenByteValues[5] = temp.dividendEventCode;
-        tokenByteValues[6] = temp.dateOfPurchase;
-        tokenByteValues[7] = temp.dateOfSale;
-        tokenByteValues[8] = temp.trackingID;
         tokenQuestionsValues[0] = temp.liableToTax;
         tokenQuestionsValues[1] = temp.subjectToTax;
         tokenQuestionsValues[2] = temp.beneficialOwner;
@@ -149,7 +138,6 @@ contract DET is ERC721Metadata('DividentEventToken', 'DET'), ERC721Enumerable, O
         return (
             temp.responsibleEntityAddress,
             tokenNumbers,
-            tokenByteValues,
             tokenQuestionsValues,
             temp.hashOfCOR
         );
@@ -182,14 +170,12 @@ contract DET is ERC721Metadata('DividentEventToken', 'DET'), ERC721Enumerable, O
      * By burning equvilant amount of OCT amount
      * @param to address of the DET minter
      * @param tokenId ID of the new DET token
-     * @param tokenByteValues tokenByteValues of investor
      * @param contractAddress contractAddress of FET token
      */
     function mint(
         address to,
         uint256 tokenId,
         string calldata hashOfCOR,
-        bytes32[9] calldata tokenByteValues,
         bytes1[5] calldata tokenQuestionsValues,
         uint256[4] calldata tokenNumbers,
         address contractAddress,
@@ -204,15 +190,6 @@ contract DET is ERC721Metadata('DividentEventToken', 'DET'), ERC721Enumerable, O
         // Index is stored to be 1 bigger than actual index
         tokenIndices[tokenId] = tokenIds.length;
         DividendInfo memory dividendInfo;
-        dividendInfo.opaqueInvestorID = tokenByteValues[0];
-        dividendInfo.country = tokenByteValues[1];
-        dividendInfo.treaty = tokenByteValues[2];
-        dividendInfo.securitySymbol = tokenByteValues[3];
-        dividendInfo.recordDate = tokenByteValues[4];
-        dividendInfo.dividendEventCode = tokenByteValues[5];
-        dividendInfo.dateOfPurchase = tokenByteValues[6];
-        dividendInfo.dateOfSale = tokenByteValues[7];
-        dividendInfo.trackingID = tokenByteValues[8];
         dividendInfo.liableToTax = tokenQuestionsValues[0];
         dividendInfo.subjectToTax = tokenQuestionsValues[1];
         dividendInfo.beneficialOwner = tokenQuestionsValues[2];
@@ -236,13 +213,11 @@ contract DET is ERC721Metadata('DividentEventToken', 'DET'), ERC721Enumerable, O
      * @dev Function to mint ERC721 DET without previous OCT balance
      * @param to address of the DET minter
      * @param tokenId ID of the new DET token
-     * @param tokenByteValues tokenByteValues of investor
      */
     function mintBlueToken(
         address to,
         uint256 tokenId,
         string calldata hashOfCOR,
-        bytes32[8] calldata tokenByteValues,
         bytes1[5] calldata tokenQuestionsValues,
         uint256[4] calldata tokenNumbers,
         address responsibleEntityAddress
@@ -253,14 +228,6 @@ contract DET is ERC721Metadata('DividentEventToken', 'DET'), ERC721Enumerable, O
         // Index is stored to be 1 bigger than actual index
         tokenIndices[tokenId] = tokenIds.length;
         DividendInfo memory dividendInfo;
-        dividendInfo.opaqueInvestorID = tokenByteValues[0];
-        dividendInfo.country = tokenByteValues[1];
-        dividendInfo.treaty = tokenByteValues[2];
-        dividendInfo.securitySymbol = tokenByteValues[3];
-        dividendInfo.recordDate = tokenByteValues[4];
-        dividendInfo.dividendEventCode = tokenByteValues[5];
-        dividendInfo.dateOfPurchase = tokenByteValues[6];
-        dividendInfo.dateOfSale = tokenByteValues[7];
         dividendInfo.liableToTax = tokenQuestionsValues[0];
         dividendInfo.subjectToTax = tokenQuestionsValues[1];
         dividendInfo.beneficialOwner = tokenQuestionsValues[2];
