@@ -19,7 +19,7 @@ api.get('/health-check', async (req, res) => {
 
   const deployNonFungibleTokenResponse = await deployNonFungibleToken({ privateKey });
 
-  console.log({ deployNonFungibleTokenResponse });
+  console.log('Deploy response: ', { deployNonFungibleTokenResponse });
 
   // for (let i = 0; i < 1000; i += 1) {
   const mintNonFungibleTokenReceipt = await mintNonFungibleToken({
@@ -28,7 +28,7 @@ api.get('/health-check', async (req, res) => {
     tokenId,
     _uri,
   });
-  console.log(`Receipt ${1}: `, mintNonFungibleTokenReceipt);
+  console.log(`Receipt mint ${0}: `, mintNonFungibleTokenReceipt);
   // }
 
   return res.send('Finished!');

@@ -1,4 +1,11 @@
-const { deploy, deploy2, deploy3, mint, mint2, mint3 } = require('../helpers/nonFungibleToken.helper');
+const {
+  deploy,
+  deploy2,
+  deploy3,
+  mint,
+  mint2,
+  mint3,
+} = require('../helpers/nonFungibleToken.helper');
 
 const deployNonFungibleToken = async ({ privateKey }) => {
   try {
@@ -13,5 +20,6 @@ const mintNonFungibleToken = async ({ privateKey, contractAddress, tokenId, _uri
   const mintResult = await mint3({ privateKey, contractAddress, tokenId, _uri });
   return mintResult;
 };
+
 
 module.exports = { deployNonFungibleToken, mintNonFungibleToken };
