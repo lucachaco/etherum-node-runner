@@ -2,7 +2,10 @@ version: '3'
 services:
 
   nodeone:
-    image: taxwavecontainer.azurecr.io/eth_node
+    #image: taxwavecontainer.azurecr.io/eth_node
+    build:
+      context: infra/Ethereum-Private-Network-POA/
+      dockerfile: master.Dockerfile
     command: >
       bash -c "./eth_common/setup_master 2> /dev/null
       && geth --networkid 15 --allow-insecure-unlock --unlock '0x0c1c28336F5F256bD6657215F00eE83121e51336' --password eth_common/password --mine --miner.gasprice=0 --rpc --rpcapi="admin,db,miner,eth,debug,personal,net,shh,txpool,web3" --rpcaddr="0.0.0.0" --rpcport=8545 --rpccorsdomain="*" --rpcvhosts="*" --shh  --ws --wsaddr="0.0.0.0" --wsport=8546 --wsapi="admin,db,miner,eth,debug,personal,net,shh,txpool,web3" --wsorigins="*" --syncmode 'full' --debug --identity=NODE_ONE"
