@@ -44,8 +44,9 @@ const deploy2 = async privateKey => {
     );
     const provider = await getProviderResolver();
     const sentTransaction = await provider.sendTransaction(signedTransaction);
-
-    const receipt = await provider.getTransactionReceipt(sentTransaction.hash);
+    const receipt = await sentTransaction.wait();
+    // await new Promise(r => setTimeout(r, 2000));
+    // const receipt = await provider.getTransactionReceipt(sentTransaction.hash);
     return receipt;
   } catch (err) {
     console.log(err);
@@ -55,8 +56,8 @@ const deploy2 = async privateKey => {
 
 const deploy3 = async privateKey => {
   try {
-    const balance = await getBalance(privateKey);
-    console.log({ balance });
+    // const balance = await getBalance(privateKey);
+    // console.log({ balance });
 
     const tx = await getUnsignedContractDeployment(detContract);
 
@@ -105,13 +106,17 @@ const mint2 = async ({ privateKey, contractAddress, tokenId, _uri }) => {
   const balance = await getBalance(privateKey);
   console.log({ balance });
   const signedTransaction = await getSignedTx(
-    { data: tx, to: '', gasPrice: 1, gasLimit: '0x4c4b40' },
+    { data: tx, to: contractAddress, gasPrice: 1, gasLimit: '0x4c4b40' },
     privateKey,
   );
   const provider = await getProviderResolver();
-  const sentTransaction = await provider.sendTransaction(signedTransaction);
 
-  return provider.getTransactionReceipt(sentTransaction.hash);
+  const sentTransaction = await provider.sendTransaction(signedTransaction);
+  // await new Promise(r => setTimeout(r, 2000));
+  const receipt = await sentTransaction.wait();
+
+  // return provider.getTransactionReceipt(sentTransaction.hash);
+  return receipt;
 };
 
 const createTokenDetails = async (
@@ -229,7 +234,10 @@ const mint3 = async ({ privateKey, contractAddress, tokenId }) => {
   console.log('b');
   // const balance = await getBalance(privateKey);
   // console.log({ balance });
-  const signedTransaction = await getSignedTx({ data: tx, to: '', gasLimit: 750000 }, privateKey);
+  const signedTransaction = await getSignedTx(
+    { data: tx, to: responsibleEntityAddress, gasLimit: 750000 },
+    privateKey,
+  );
   console.log('c');
   const provider = await getProviderResolver();
   console.log('d');

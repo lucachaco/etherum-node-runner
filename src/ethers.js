@@ -11,8 +11,8 @@ const connect = () => {
   console.log(`Connecting to: ${config.RPC_PROVIDER}`);
 
   try {
-    const connectionInfo = { url: config.RPC_PROVIDER, timeout: 3000000 };
-    etherjsProvider = new ethers.providers.JsonRpcProvider(connectionInfo);
+    // const connectionInfo = { url: config.RPC_PROVIDER, timeout: 3000000 };
+    etherjsProvider = new ethers.providers.JsonRpcProvider(config.RPC_PROVIDER);
   } catch (e) {
     console.log('Error while connecting to the provider: ');
   }
