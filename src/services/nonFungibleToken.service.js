@@ -15,8 +15,22 @@ const deployNonFungibleToken = async ({ privateKey }) => {
     throw err;
   }
 };
-const mintNonFungibleToken = async ({ privateKey, account, contractAddress, tokenId, _uri }) => {
-  const mintResult = await mint3({ privateKey, account, contractAddress, tokenId, _uri });
+const mintNonFungibleToken = async ({
+  privateKey,
+  account,
+  contractAddress,
+  tokenId,
+  _uri,
+  fungibleTokenContractAddress,
+}) => {
+  const mintResult = await mint3({
+    privateKey,
+    account,
+    contractAddress,
+    tokenId,
+    _uri,
+    fungibleTokenContractAddress,
+  });
   return mintResult;
 };
 

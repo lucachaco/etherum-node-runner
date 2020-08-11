@@ -193,11 +193,10 @@ const createTokenDetails = async (
   };
 };
 
-const mint3 = async ({ privateKey, account, contractAddress, tokenId }) => {
+const mint3 = async ({ privateKey, account, contractAddress, tokenId, fungibleTokenContractAddress }) => {
   const contractInstance = await getContractInstance(detContract.abi, contractAddress);
 
   const to = contractAddress;
-  const fungibleTokenContractAddress = contractAddress;
   const responsibleEntityAddress = contractAddress;
   const hashOfCOR = '';
 
@@ -219,6 +218,7 @@ const mint3 = async ({ privateKey, account, contractAddress, tokenId }) => {
     tokenByteValues,
     tokenQuestionsValues,
     tokenNumbers,
+    fungibleTokenContractAddress,
     responsibleEntityAddress,
   ]);
 
