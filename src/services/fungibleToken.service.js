@@ -1,23 +1,19 @@
 const {
-  deploy,
-  deploy2,
   deploy3,
-  mint,
-  mint2,
   mint3,
-} = require('../helpers/nonFungibleToken.helper');
+} = require('../helpers/fungibleToken.helper');
 
-const deployNonFungibleToken = async ({ privateKey }) => {
+const deployFungibleToken = async (params) => {
   try {
-    return await deploy3(privateKey);
+    return await deploy3(params);
   } catch (err) {
     console.log(err);
     throw err;
   }
 };
-const mintNonFungibleToken = async ({ privateKey, contractAddress, tokenId, _uri }) => {
+const mintFungibleToken = async ({ privateKey, contractAddress, tokenId, _uri }) => {
   const mintResult = await mint3({ privateKey, contractAddress, tokenId, _uri });
   return mintResult;
 };
 
-module.exports = { deployNonFungibleToken, mintNonFungibleToken };
+module.exports = { deployFungibleToken, mintFungibleToken };

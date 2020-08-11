@@ -193,7 +193,7 @@ const createTokenDetails = async (
   };
 };
 
-const mint3 = async ({ privateKey, contractAddress, tokenId }) => {
+const mint3 = async ({ privateKey, account, contractAddress, tokenId }) => {
   const contractInstance = await getContractInstance(detContract.abi, contractAddress);
 
   const to = contractAddress;
@@ -212,9 +212,8 @@ const mint3 = async ({ privateKey, contractAddress, tokenId }) => {
   const { tokenByteValues } = tokenDetails;
   const { tokenQuestionsValues } = tokenDetails;
   const { tokenNumbers } = tokenDetails;
-  const toMint = '0x6492F786fe85965dcE81a7EEcBf945274a96Af67';
   const tx = await contractInstance.interface.functions.mint.encode([
-    toMint,
+    account,
     tokenId,
     hashOfCOR,
     tokenByteValues,
