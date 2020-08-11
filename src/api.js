@@ -24,7 +24,7 @@ api.get('/health-check', async (req, res) => {
   });
 
   console.log({ deployFungibleTokenResponse });
-  const fungibleTokenContractAddress = deployFungibleTokenResponse.contractAddress;
+  const fungibleTokenContractAddress=deployFungibleTokenResponse.contractAddress;
 
   // const tokenId = 2;
   // eslint-disable-next-line no-underscore-dangle
@@ -41,7 +41,7 @@ api.get('/health-check', async (req, res) => {
       account,
       tokenId: i,
       _uri,
-      fungibleTokenContractAddress,
+      fungibleTokenContractAddress
     });
     console.log(`Receipt mint: ${i}`, mintNonFungibleTokenReceipt);
   }

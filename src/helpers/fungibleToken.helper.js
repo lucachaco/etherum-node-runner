@@ -1,8 +1,8 @@
 // const detContract = require('../../build/contracts/DET.json');
-
 const { utf8ToHex } = require('dapp-utils');
 
 const ethersLib = require('ethers');
+const config = require('../config');
 const fungibleTokenContract = require('../../build/contracts/FET.json');
 const {
   getContractInstance,
@@ -31,7 +31,7 @@ const deploy3 = async ({ privateKey, name, symbol, initialAccountAddress, initia
     ]);
 
     const signedTransaction = await getSignedTx(
-      { data: tx, to: '', gasPrice: 1, gasLimit: '0x4c4b40' },
+      { data: tx, to: '', gasPrice: 1, gasLimit: config.GAS_LIMIT },
       privateKey,
     );
     const provider = await getProviderResolver();

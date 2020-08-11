@@ -1,4 +1,5 @@
 {
   "RPC_PROVIDER_WS": "ws://nodeone:8546",
-  "RPC_PROVIDER": "http://nodeone:8545"
+  "RPC_PROVIDER": "http://nodeone:8545",
+  "GAS_LIMIT": "0x4c4b40"
 }

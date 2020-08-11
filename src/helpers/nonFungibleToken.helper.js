@@ -1,6 +1,6 @@
 const { utf8ToHex } = require('dapp-utils');
-
 const ethersLib = require('ethers');
+const config = require('../config');
 const {
   getContractInstance,
   getSignedTx,
@@ -60,7 +60,7 @@ const deploy3 = async privateKey => {
     const tx = await getUnsignedContractDeployment(detContract);
 
     const signedTransaction = await getSignedTx(
-      { data: tx, to: '', gasPrice: 1, gasLimit: '0x4c4b40' },
+      { data: tx, to: '', gasPrice: 1, gasLimit: config.GAS_LIMIT },
       privateKey,
     );
     const provider = await getProviderResolver();
@@ -123,20 +123,20 @@ const createTokenDetails = async (
   fungibleTokenContractAddress,
   responsibleEntityAddress,
 ) => {
-  const opaqueInvestorID = '0';
-  const country = '0';
-  const treatyCategoryCode = '0';
-  const securitySymbol = '0';
-  const recordDate = '0';
-  const dividendEventCode = '0';
-  const dateOfPurchase = '0';
-  const dateOfSale = '0';
-  const liableToTax = '0';
-  const subjectToTax = '0';
-  const beneficialOwner = '0';
-  const permanentEstablishment = '0';
-  const securitiesPartOfBorrowing = '0';
-  const trackingID = '0';
+  const opaqueInvestorID = 'I1-197';
+  const country = 'Italy';
+  const treatyCategoryCode = 'Fund0';
+  const securitySymbol = 'Fund';
+  const recordDate = '2018-12-15T00:00:00.000Z';
+  const dividendEventCode = 'div-contract-2';
+  const dateOfPurchase = '2018-12-15T00:00:00.000Z';
+  const dateOfSale = '2018-12-15T00:00:00.000Z';
+  const liableToTax = 'Y';
+  const subjectToTax = 'Y';
+  const beneficialOwner = 'Y';
+  const permanentEstablishment = 'Y';
+  const securitiesPartOfBorrowing = 'Y';
+  const trackingID = '2F786fe859';
 
   const hexFormattedOpaqueInvestorID = utf8ToHex(opaqueInvestorID);
   const hexFormattedCountry = utf8ToHex(country);
@@ -171,9 +171,9 @@ const createTokenDetails = async (
   tokenQuestionsValues.push(hexFormattedPermanentEstablishment.substring(0, 4));
   tokenQuestionsValues.push(hexFormattedSecuritiesPartOfBorrowing.substring(0, 4));
 
-  const dividendPerShare = 0;
-  const amount = 0;
-  const wht = 0;
+  const dividendPerShare = 3;
+  const amount = 4000;
+  const wht = 400;
   const tokenNumbers = [];
   const previousTokenId = 3;
   tokenNumbers.push(dividendPerShare);
@@ -193,7 +193,13 @@ const createTokenDetails = async (
   };
 };
 
-const mint3 = async ({ privateKey, account, contractAddress, tokenId, fungibleTokenContractAddress }) => {
+const mint3 = async ({
+  privateKey,
+  account,
+  contractAddress,
+  tokenId,
+  fungibleTokenContractAddress,
+}) => {
   const contractInstance = await getContractInstance(detContract.abi, contractAddress);
 
   const to = contractAddress;
@@ -223,7 +229,7 @@ const mint3 = async ({ privateKey, account, contractAddress, tokenId, fungibleTo
   ]);
 
   const signedTransaction = await getSignedTx(
-    { data: tx, to: contractAddress, gasPrice: 1, gasLimit: '0xffffffff' },
+    { data: tx, to: contractAddress, gasPrice: 1, gasLimit: config.GAS_LIMIT },
     privateKey,
   );
   const provider = await getProviderResolver();
