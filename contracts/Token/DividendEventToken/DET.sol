@@ -183,7 +183,6 @@ contract DET is ERC721Metadata('DividentEventToken', 'DET'), ERC721Enumerable, O
      * @param to address of the DET minter
      * @param tokenId ID of the new DET token
      * @param tokenByteValues tokenByteValues of investor
-     * @param contractAddress contractAddress of FET token
      */
     function mint(
         address to,
@@ -192,11 +191,10 @@ contract DET is ERC721Metadata('DividentEventToken', 'DET'), ERC721Enumerable, O
         bytes32[9] calldata tokenByteValues,
         bytes1[5] calldata tokenQuestionsValues,
         uint256[4] calldata tokenNumbers,
-        address contractAddress,
         address responsibleEntityAddress
     ) external onlyTokenOwner(to) {
-        uint256 total = getFetBalance(to, contractAddress);
-        require(tokenNumbers[1] <= total, 'Current address not enough balance!');
+        //uint256 total = getFetBalance(to, contractAddress);
+        //require(tokenNumbers[1] <= total, 'Current address not enough balance!');
 
         tokenIds.push(tokenId);
 
@@ -227,8 +225,8 @@ contract DET is ERC721Metadata('DividentEventToken', 'DET'), ERC721Enumerable, O
         dividendInfo.responsibleEntityAddress = responsibleEntityAddress;
         tokenDetails[tokenId] = dividendInfo;
         // Create the fungible token with the contract address
-        IFET _fungibleEventToken = IFET(contractAddress);
-        _fungibleEventToken.burn(to, tokenNumbers[1]);
+        //IFET _fungibleEventToken = IFET(contractAddress);
+        //_fungibleEventToken.burn(to, tokenNumbers[1]);
         super._mint(to, tokenId);
     }
 

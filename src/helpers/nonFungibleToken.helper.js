@@ -39,14 +39,12 @@ const deploy2 = async privateKey => {
     const tx = await getUnsignedContractDeployment(nonFungibleTokenContract);
 
     const signedTransaction = await getSignedTx(
-      { data: tx, to: '', gasPrice: 1, gasLimit: 2000000 },
+      { data: tx, to: '', gasPrice: 1, gasLimit: '0x4c4b40' },
       privateKey,
     );
     const provider = await getProviderResolver();
     const sentTransaction = await provider.sendTransaction(signedTransaction);
     const receipt = await sentTransaction.wait();
-    // await new Promise(r => setTimeout(r, 2000));
-    // const receipt = await provider.getTransactionReceipt(sentTransaction.hash);
     return receipt;
   } catch (err) {
     console.log(err);
@@ -67,9 +65,8 @@ const deploy3 = async privateKey => {
     );
     const provider = await getProviderResolver();
     const sentTransaction = await provider.sendTransaction(signedTransaction);
-    await new Promise(r => setTimeout(r, 2000));
-
-    const receipt = await provider.getTransactionReceipt(sentTransaction.hash);
+    // const receipt = await provider.getTransactionReceipt(sentTransaction.hash);
+    const receipt = await sentTransaction.wait();
     return receipt;
   } catch (err) {
     console.log(err);
@@ -103,8 +100,6 @@ const mint = async ({ privateKey, contractAddress, tokenId, _uri }) => {
 const mint2 = async ({ privateKey, contractAddress, tokenId, _uri }) => {
   const contractInstance = await getContractInstance(nonFungibleTokenContract.abi, contractAddress);
   const tx = await contractInstance.interface.functions.mint.encode([tokenId, _uri]);
-  const balance = await getBalance(privateKey);
-  console.log({ balance });
   const signedTransaction = await getSignedTx(
     { data: tx, to: contractAddress, gasPrice: 1, gasLimit: '0x4c4b40' },
     privateKey,
@@ -112,6 +107,8 @@ const mint2 = async ({ privateKey, contractAddress, tokenId, _uri }) => {
   const provider = await getProviderResolver();
 
   const sentTransaction = await provider.sendTransaction(signedTransaction);
+  const gasEstimation = await provider.estimateGas(signedTransaction);
+  console.log({ gasEstimation });
   // await new Promise(r => setTimeout(r, 2000));
   const receipt = await sentTransaction.wait();
 
@@ -197,7 +194,6 @@ const createTokenDetails = async (
 };
 
 const mint3 = async ({ privateKey, contractAddress, tokenId }) => {
-  console.log('---');
   const contractInstance = await getContractInstance(detContract.abi, contractAddress);
 
   const to = contractAddress;
@@ -205,7 +201,6 @@ const mint3 = async ({ privateKey, contractAddress, tokenId }) => {
   const responsibleEntityAddress = contractAddress;
   const hashOfCOR = '';
 
-  console.log('--');
   const tokenDetails = await createTokenDetails({
     to,
     tokenId,
@@ -217,36 +212,29 @@ const mint3 = async ({ privateKey, contractAddress, tokenId }) => {
   const { tokenByteValues } = tokenDetails;
   const { tokenQuestionsValues } = tokenDetails;
   const { tokenNumbers } = tokenDetails;
-
+  const toMint = '0x6492F786fe85965dcE81a7EEcBf945274a96Af67';
   const tx = await contractInstance.interface.functions.mint.encode([
-    to,
+    toMint,
     tokenId,
     hashOfCOR,
+    tokenByteValues,
     tokenQuestionsValues,
     tokenNumbers,
-    fungibleTokenContractAddress,
     responsibleEntityAddress,
   ]);
 
-  console.log('a');
-  const balance = await getBalance(privateKey);
-  console.log({ balance });
-  console.log('b');
-  // const balance = await getBalance(privateKey);
-  // console.log({ balance });
   const signedTransaction = await getSignedTx(
-    { data: tx, to: responsibleEntityAddress, gasLimit: 750000 },
+    { data: tx, to: contractAddress, gasPrice: 1, gasLimit: '0xffffffff' },
     privateKey,
   );
-  console.log('c');
   const provider = await getProviderResolver();
-  console.log('d');
-  await new Promise(r => setTimeout(r, 2000));
 
+  const gasEstimation = await provider.estimateGas(signedTransaction);
+  console.log({ gasEstimation });
   const sentTransaction = await provider.sendTransaction(signedTransaction);
-  console.log('e');
-  await new Promise(r => setTimeout(r, 2000));
-  return provider.getTransactionReceipt(sentTransaction.hash);
+  const receipt = await sentTransaction.wait();
+  // return provider.getTransactionReceipt(sentTransaction.hash);
+  return receipt;
 };
 
 module.exports = { deploy, deploy2, deploy3, getInstance, mint, mint2, mint3 };

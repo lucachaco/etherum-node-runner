@@ -20,7 +20,7 @@ api.get('/health-check', async (req, res) => {
 
   console.log('Deploy response: ', { deployNonFungibleTokenResponse });
 
-  for (let i = 0; i < 100; i += 1) {
+  for (let i = 0; i < 500; i += 1) {
     const mintNonFungibleTokenReceipt = await mintNonFungibleToken({
       privateKey,
       contractAddress: deployNonFungibleTokenResponse.contractAddress,
