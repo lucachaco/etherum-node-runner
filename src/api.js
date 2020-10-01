@@ -3,6 +3,7 @@ const ethers = require('./ethers');
 const {
   deployNonFungibleToken,
   mintNonFungibleToken,
+  getErroMessage,
 } = require('./services/nonFungibleToken.service');
 
 const { deployFungibleToken } = require('./services/fungibleToken.service');
@@ -12,8 +13,8 @@ const port = 3001;
 ethers.connect();
 
 api.get('/health-check', async (req, res) => {
-  const account = '0x6492F786fe85965dcE81a7EEcBf945274a96Af67';
-  const privateKey = '0x13269d5825c0bc3530a41ea575bb114e5a036d38e4d8eff6ea40eb1e6db5b212';
+  const account = '0x0c1c28336f5f256bd6657215f00ee83121e51336';
+  const privateKey = '0x6406dee0024f4153023622b2cb85bb6a1a215e245e071dbfd801070814339644';
   // const privateKey = '0xf0fada4070ce6946aac687b913f0508094f0b2e4327fe69f2ad5cec949995879';
   const deployFungibleTokenResponse = await deployFungibleToken({
     privateKey,
@@ -24,7 +25,7 @@ api.get('/health-check', async (req, res) => {
   });
 
   console.log({ deployFungibleTokenResponse });
-  const fungibleTokenContractAddress=deployFungibleTokenResponse.contractAddress;
+  const fungibleTokenContractAddress = deployFungibleTokenResponse.contractAddress;
 
   // const tokenId = 2;
   // eslint-disable-next-line no-underscore-dangle
@@ -34,16 +35,22 @@ api.get('/health-check', async (req, res) => {
 
   console.log({ deployNonFungibleTokenResponse });
 
-  for (let i = 0; i < 500; i += 1) {
+  try {
     const mintNonFungibleTokenReceipt = await mintNonFungibleToken({
       privateKey,
       contractAddress: deployNonFungibleTokenResponse.contractAddress,
       account,
-      tokenId: i,
+      tokenId: 1,
       _uri,
-      fungibleTokenContractAddress
+      fungibleTokenContractAddress,
     });
-    console.log(`Receipt mint: ${i}`, mintNonFungibleTokenReceipt);
+    console.log(mintNonFungibleTokenReceipt);
+    
+  } catch (err) {
+    console.log(err);
+    console.log(err.transaction.hash);
+
+    await getErroMessage(err.transaction.hash);
   }
 
   return res.send('Finished!');

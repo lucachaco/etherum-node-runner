@@ -16,7 +16,7 @@ const {
 
 const nonFungibleTokenContract = require('../../build/contracts/NFTokenMetadata.json');
 
-const deploy3 = async ({ privateKey, name, symbol, initialAccountAddress, initialBalance }) => {
+const deploy = async ({ privateKey, name, symbol, initialAccountAddress, initialBalance }) => {
   try {
     // const balance = await getBalance(privateKey);
     // console.log({ balance });
@@ -31,7 +31,7 @@ const deploy3 = async ({ privateKey, name, symbol, initialAccountAddress, initia
     ]);
 
     const signedTransaction = await getSignedTx(
-      { data: tx, to: '', gasPrice: 1, gasLimit: config.GAS_LIMIT },
+      { data: tx, to: '', gasPrice: 1, gasLimit: config.GAS_LIMIT_DEPLOY },
       privateKey,
     );
     const provider = await getProviderResolver();
@@ -50,4 +50,4 @@ const getInstance = async contractAddress => {
   return instance;
 };
 
-module.exports = { deploy3, getInstance };
+module.exports = { deploy, getInstance };

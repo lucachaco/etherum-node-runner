@@ -60,7 +60,7 @@ const deploy3 = async privateKey => {
     const tx = await getUnsignedContractDeployment(detContract);
 
     const signedTransaction = await getSignedTx(
-      { data: tx, to: '', gasPrice: 1, gasLimit: config.GAS_LIMIT },
+      { data: tx, to: '', gasPrice: 1, gasLimit: config.GAS_LIMIT_DEPLOY },
       privateKey,
     );
     const provider = await getProviderResolver();
@@ -108,12 +108,22 @@ const mint2 = async ({ privateKey, contractAddress, tokenId, _uri }) => {
 
   const sentTransaction = await provider.sendTransaction(signedTransaction);
   const gasEstimation = await provider.estimateGas(signedTransaction);
-  console.log({ gasEstimation });
+
   // await new Promise(r => setTimeout(r, 2000));
+
   const receipt = await sentTransaction.wait();
 
   // return provider.getTransactionReceipt(sentTransaction.hash);
   return receipt;
+};
+
+const getError = async hash => {
+  const provider = await getProviderResolver();
+
+  const tx = await provider.getTransaction(hash);
+
+  const code = await provider.call(tx, tx.blockNumber);
+  console.log({ code });
 };
 
 const createTokenDetails = async (
@@ -229,7 +239,7 @@ const mint3 = async ({
   ]);
 
   const signedTransaction = await getSignedTx(
-    { data: tx, to: contractAddress, gasPrice: 1, gasLimit: config.GAS_LIMIT },
+    { data: tx, to: contractAddress, gasPrice: 1, gasLimit: config.GAS_LIMIT_MINT },
     privateKey,
   );
   const provider = await getProviderResolver();
@@ -242,4 +252,4 @@ const mint3 = async ({
   return receipt;
 };
 
-module.exports = { deploy, deploy2, deploy3, getInstance, mint, mint2, mint3 };
+module.exports = { deploy, deploy2, deploy3, getInstance, mint, mint2, mint3, getError };
