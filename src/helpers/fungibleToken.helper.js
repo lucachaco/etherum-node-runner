@@ -1,27 +1,37 @@
-// const detContract = require('../../build/contracts/DET.json');
-
-const { utf8ToHex } = require('dapp-utils');
-
 const ethersLib = require('ethers');
 const fungibleTokenContract = require('../../build/contracts/FET.json');
 const {
   getContractInstance,
   getSignedTx,
-  getContractInstanceWithSigner,
   getProviderResolver,
   getWallet,
   getUnsignedContractDeployment,
-  getBalance,
 } = require('../ethers');
 
-const nonFungibleTokenContract = require('../../build/contracts/NFTokenMetadata.json');
+const deploy = async ({ privateKey, name, symbol, initialAccountAddress, initialBalance }) => {
+  try {
+    const wallet = await getWallet(privateKey);
+    const factory = new ethersLib.ContractFactory(
+      fungibleTokenContract.abi,
+      fungibleTokenContract.bytecode,
+      wallet,
+    );
+    const factoryDeployContract = await factory.deploy(
+      name,
+      symbol,
+      0,
+      initialAccountAddress,
+      initialBalance,
+    );
+    return factoryDeployContract.deployed();
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
 
 const deploy3 = async ({ privateKey, name, symbol, initialAccountAddress, initialBalance }) => {
   try {
-    // const balance = await getBalance(privateKey);
-    // console.log({ balance });
-
-    // const tx = await getUnsignedContractDeployment(detContract);
     const tx = getUnsignedContractDeployment(fungibleTokenContract, [
       name,
       symbol,
@@ -36,9 +46,7 @@ const deploy3 = async ({ privateKey, name, symbol, initialAccountAddress, initia
     );
     const provider = await getProviderResolver();
     const sentTransaction = await provider.sendTransaction(signedTransaction);
-    // const receipt = await provider.getTransactionReceipt(sentTransaction.hash);
-    const receipt = await sentTransaction.wait();
-    return receipt;
+    return sentTransaction.wait();
   } catch (err) {
     console.log(err);
     throw err;
@@ -46,8 +54,7 @@ const deploy3 = async ({ privateKey, name, symbol, initialAccountAddress, initia
 };
 
 const getInstance = async contractAddress => {
-  const instance = await getContractInstance(nonFungibleTokenContract.abi, contractAddress);
-  return instance;
+  return getContractInstance(fungibleTokenContract.abi, contractAddress);
 };
 
-module.exports = { deploy3, getInstance };
+module.exports = { deploy, deploy3, getInstance };

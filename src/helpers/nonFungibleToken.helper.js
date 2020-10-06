@@ -23,8 +23,7 @@ const deploy = async privateKey => {
       wallet,
     );
     const factoryDeployContract = await factory.deploy();
-    const deployedContract = await factoryDeployContract.deployed();
-    return deployedContract;
+    return factoryDeployContract.deployed();
   } catch (err) {
     console.log(err);
     throw err;
@@ -44,8 +43,7 @@ const deploy2 = async privateKey => {
     );
     const provider = await getProviderResolver();
     const sentTransaction = await provider.sendTransaction(signedTransaction);
-    const receipt = await sentTransaction.wait();
-    return receipt;
+    return sentTransaction.wait();
   } catch (err) {
     console.log(err);
     throw err;
@@ -54,9 +52,6 @@ const deploy2 = async privateKey => {
 
 const deploy3 = async privateKey => {
   try {
-    // const balance = await getBalance(privateKey);
-    // console.log({ balance });
-
     const tx = await getUnsignedContractDeployment(detContract);
 
     const signedTransaction = await getSignedTx(
@@ -65,9 +60,7 @@ const deploy3 = async privateKey => {
     );
     const provider = await getProviderResolver();
     const sentTransaction = await provider.sendTransaction(signedTransaction);
-    // const receipt = await provider.getTransactionReceipt(sentTransaction.hash);
-    const receipt = await sentTransaction.wait();
-    return receipt;
+    return sentTransaction.wait();
   } catch (err) {
     console.log(err);
     throw err;
@@ -75,17 +68,11 @@ const deploy3 = async privateKey => {
 };
 
 const getInstance = async contractAddress => {
-  const instance = await getContractInstance(nonFungibleTokenContract.abi, contractAddress);
-  return instance;
+  return getContractInstance(nonFungibleTokenContract.abi, contractAddress);
 };
 
 const getInstanceWithSigner = async (contractAddress, privateKey) => {
-  const instance = await getContractInstanceWithSigner(
-    nonFungibleTokenContract.abi,
-    contractAddress,
-    privateKey,
-  );
-  return instance;
+  return getContractInstanceWithSigner(nonFungibleTokenContract.abi, contractAddress, privateKey);
 };
 
 const mint = async ({ privateKey, contractAddress, tokenId, _uri }) => {
@@ -93,8 +80,7 @@ const mint = async ({ privateKey, contractAddress, tokenId, _uri }) => {
   const overrides = {
     gasLimit: 750000,
   };
-  const mintResponse = await contractInstance.mint(tokenId, _uri, overrides);
-  return mintResponse;
+  return contractInstance.mint(tokenId, _uri, overrides);
 };
 
 const mint2 = async ({ privateKey, contractAddress, tokenId, _uri }) => {
@@ -109,11 +95,7 @@ const mint2 = async ({ privateKey, contractAddress, tokenId, _uri }) => {
   const sentTransaction = await provider.sendTransaction(signedTransaction);
   const gasEstimation = await provider.estimateGas(signedTransaction);
   console.log({ gasEstimation });
-  // await new Promise(r => setTimeout(r, 2000));
-  const receipt = await sentTransaction.wait();
-
-  // return provider.getTransactionReceipt(sentTransaction.hash);
-  return receipt;
+  return sentTransaction.wait();
 };
 
 const createTokenDetails = async (
@@ -193,7 +175,13 @@ const createTokenDetails = async (
   };
 };
 
-const mint3 = async ({ privateKey, account, contractAddress, tokenId, fungibleTokenContractAddress }) => {
+const mint3 = async ({
+  privateKey,
+  account,
+  contractAddress,
+  tokenId,
+  fungibleTokenContractAddress,
+}) => {
   const contractInstance = await getContractInstance(detContract.abi, contractAddress);
 
   const to = contractAddress;
@@ -231,9 +219,7 @@ const mint3 = async ({ privateKey, account, contractAddress, tokenId, fungibleTo
   const gasEstimation = await provider.estimateGas(signedTransaction);
   console.log({ gasEstimation });
   const sentTransaction = await provider.sendTransaction(signedTransaction);
-  const receipt = await sentTransaction.wait();
-  // return provider.getTransactionReceipt(sentTransaction.hash);
-  return receipt;
+  return sentTransaction.wait();
 };
 
 module.exports = { deploy, deploy2, deploy3, getInstance, mint, mint2, mint3 };

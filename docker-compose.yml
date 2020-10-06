@@ -1,6 +1,5 @@
 version: '3'
 services:
-
   nodeone:
     #image: taxwavecontainer.azurecr.io/eth_node
     build:
@@ -18,6 +17,23 @@ services:
     tty: true
     networks:
       - lc1-net
+
+  seeder-api:
+    build:
+      context: ./
+      dockerfile: seeder.Dockerfile
+    command: npm run seeder
+    volumes:
+      - ./seeder:/app/seeder:delegated
+      - ./package.json:/app/package.json:delegated
+    depends_on:
+      - runner-api
+    ports:
+      - 4001:4001
+    networks:
+      - lc1-net
+    environment:
+      VIRTUAL_HOST: seeder.docker
 
   runner-api:
     build:
@@ -37,7 +53,6 @@ services:
       VIRTUAL_HOST: taxwave-api.LC1.docker
     networks:
       - lc1-net
-
 
   truffle:
     image: ajmay/truffle:5.0.9
@@ -60,8 +75,6 @@ services:
         max-size: 10m
     networks:
       - lc1-net
-
-
 
 networks:
   lc1-net:
