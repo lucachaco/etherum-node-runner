@@ -44,8 +44,16 @@ api.get('/health-check', async (req, res) => {
       _uri,
       fungibleTokenContractAddress,
     });
-    console.log(mintNonFungibleTokenReceipt);
-    
+    console.log('Mint 1: ', mintNonFungibleTokenReceipt);
+    const mintNonFungibleTokenReceipt2 = await mintNonFungibleToken({
+      privateKey,
+      contractAddress: deployNonFungibleTokenResponse.contractAddress,
+      account,
+      tokenId: 1,
+      _uri,
+      fungibleTokenContractAddress,
+    });
+    console.log('Mint 2: ', mintNonFungibleTokenReceipt2);
   } catch (err) {
     console.log(err);
     console.log(err.transaction.hash);

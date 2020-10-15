@@ -2,7 +2,6 @@ version: '3'
 services:
 
   nodeone:
-    #image: taxwavecontainer.azurecr.io/eth_node
     build:
       context: infra/Ethereum-Private-Network-POA/
       dockerfile: master.Dockerfile
